@@ -45,7 +45,6 @@ export class AppComponent {
   addTodo(value: any) {
     if (value !== '') {
       this.todoArray.push(value);
-      //console.log(this.todos)
     } else {
       alert('Field required **');
     }
@@ -63,7 +62,7 @@ export class AppComponent {
   // submit Form
   todoSubmit(value: any) {
     if (value !== '') {
-      this.todoArray.push(value.todo);
+      this.todoArray.push(value);
       //this.todoForm.reset()
     } else {
       alert('Field required **');
