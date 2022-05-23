@@ -5,8 +5,8 @@ import {
   transition,
   keyframes,
 } from '@angular/animations';
+import { Component, OnInit, Input } from '@angular/core';
 
-import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -37,24 +37,57 @@ import { Component } from '@angular/core';
     ]),
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   todoArray: string[] = [];
-
+  httpPost(theUrl: string, senditem: any) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('POST', theUrl, false); // false for synchronous request
+    xmlHttp.send(senditem);
+    return xmlHttp.responseText;
+  }
+  httpGet(theUrl: string) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', theUrl, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+  }
+  //add service for the https stuff
   //todoForm: new FormGroup()
-
-  addTodo(value: any) {
+  updatelist() {
+    var top = this.httpGet('http://localhost:3000/development/db');
+    var numberPattern = /\d+/g;
+    var topnums = String(top.match(numberPattern));
+    var topnum = parseInt(topnums);
+    this.todoArray.length = 0;
+    for (let i = 0; i < topnum; i++) {
+      var rawin = this.httpPost('http://localhost:3000/development/getfunc', i);
+      var temp = rawin.split('"');
+      this.todoArray.push(temp[9]);
+    }
+  }
+  addTodo(value: string) {
     if (value !== '') {
-      this.todoArray.push(value);
+      var temp = '"' + value + '"';
+      console.log(temp);
+      var response2 = this.httpPost(
+        'http://localhost:3000/development/createfunc',
+        temp
+      );
+      this.updatelist();
     } else {
       alert('Field required **');
     }
   }
-
+  public ngOnInit(): void {
+    this.updatelist();
+  }
   /*delete item*/
   deleteItem(todo: any) {
     for (let i = 0; i <= this.todoArray.length; i++) {
       if (todo == this.todoArray[i]) {
-        this.todoArray.splice(i, 1);
+        this.httpPost('http://localhost:3000/development/deletefunc', i);
+
+        this.updatelist();
       }
     }
   }

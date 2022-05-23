@@ -1,8 +1,5 @@
 <div class="container">
-  <form
-    #todoForm="ngForm"
-    (submit)="todoSubmit(todoForm.value); todoForm.resetForm()"
-  >
+  <form #todoForm="ngForm" (submit)="addTodo(todo.value); todoForm.resetForm()">
     <div class="form-group">
       <h1 class="text-center">To Do List</h1>
       <div class="input-group-prepend">
@@ -14,7 +11,10 @@
           name="todo"
           ngModel
         />
-        <span class="input-group-text" (click)="addTodo(todo.value)">
+        <span
+          class="input-group-text"
+          (click)="addTodo(todo.value); todoForm.resetForm()"
+        >
           <i class="material-icons">add</i></span
         >
       </div>
