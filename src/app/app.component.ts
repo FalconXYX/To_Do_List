@@ -6,6 +6,7 @@ import {
   keyframes,
 } from '@angular/animations';
 import { Component, OnInit, Input } from '@angular/core';
+import { HttpService } from './http.service';
 
 @Component({
   selector: 'app-root',
@@ -39,28 +40,20 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   todoArray: string[] = [];
-  httpPost(theUrl: string, senditem: any) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('POST', theUrl, false); // false for synchronous request
-    xmlHttp.send(senditem);
-    return xmlHttp.responseText;
-  }
-  httpGet(theUrl: string) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', theUrl, false);
-    xmlHttp.send(null);
-    return xmlHttp.responseText;
-  }
+  constructor(private serv: HttpService) {}
   //add service for the https stuff
   //todoForm: new FormGroup()
   updatelist() {
-    var top = this.httpGet('http://localhost:3000/development/db');
+    var top = this.serv.httpGet('http://localhost:3000/development/db');
     var numberPattern = /\d+/g;
     var topnums = String(top.match(numberPattern));
     var topnum = parseInt(topnums);
     this.todoArray.length = 0;
     for (let i = 0; i < topnum; i++) {
-      var rawin = this.httpPost('http://localhost:3000/development/getfunc', i);
+      var rawin = this.serv.httpPost(
+        'http://localhost:3000/development/getfunc',
+        i
+      );
       var temp = rawin.split('"');
       this.todoArray.push(temp[9]);
     }
@@ -69,7 +62,7 @@ export class AppComponent implements OnInit {
     if (value !== '') {
       var temp = '"' + value + '"';
       console.log(temp);
-      var response2 = this.httpPost(
+      var response2 = this.serv.httpPost(
         'http://localhost:3000/development/createfunc',
         temp
       );
@@ -85,7 +78,7 @@ export class AppComponent implements OnInit {
   deleteItem(todo: any) {
     for (let i = 0; i <= this.todoArray.length; i++) {
       if (todo == this.todoArray[i]) {
-        this.httpPost('http://localhost:3000/development/deletefunc', i);
+        this.serv.httpPost('http://localhost:3000/development/deletefunc', i);
 
         this.updatelist();
       }

@@ -5,13 +5,19 @@ body {
   margin: 0;
 }
 form {
-  max-width: 30em;
+  max-width: 40em;
   margin: 4em auto;
   position: relative;
   background: #f4f4f4;
   padding: 2em 3em;
   overflow: hidden;
 }
+@media screen and (max-width: 480px) {
+  form {
+    max-width: 25em;
+  }
+}
+
 form h1 {
   font-family: "Raleway";
   color: #f97300;
@@ -26,10 +32,16 @@ form .data {
 form .data li {
   background: #fff;
   border-left: 4px solid #f97300;
+  font-size: 18px;
   padding: 1em;
   margin: 1em auto;
   color: #666;
   font-family: "Raleway";
+}
+@media screen and (max-width: 480px) {
+  form .data li {
+    font-size: 12px;
+  }
 }
 form .data li i {
   float: right;
@@ -48,6 +60,7 @@ form .input-group-text {
   top: 68px;
   cursor: pointer;
 }
+
 form .input-group-text i {
   font-size: 2em;
 }
